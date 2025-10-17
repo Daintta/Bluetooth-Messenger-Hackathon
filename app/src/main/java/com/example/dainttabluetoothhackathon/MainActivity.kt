@@ -120,7 +120,8 @@ class MainActivity : ComponentActivity() {
                             onStartScan = viewModel::startScan,
                             onStopScan = viewModel::stopScan,
                             onStartServer = viewModel::waitForIncomingConnections,
-                            onDeviceClick = viewModel::connectToDevice
+                            onDeviceClick = viewModel::connectToDevice,
+                            onGoToChatClick = { navController.navigate("chat") }
                         ) }
                         composable("chat") { ConversationScreen(
                             navController = navController,

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -38,6 +39,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.dainttabluetoothhackathon.data.BluetoothMessage
 import com.example.dainttabluetoothhackathon.data.BluetoothUIState
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +77,7 @@ fun ConversationScreen(
                         }
                     ) {
                         Icon(
-                            Icons.Default.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -129,6 +133,13 @@ fun MessageRow(message: BluetoothMessage) {
         else
             RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 16.dp)
 
+    val formatter = remember { DateTimeFormatter.ofPattern("HH:mm") }
+    val formattedTime = remember(message.time) {
+        val instant = Instant.ofEpochMilli(message.time)
+        val localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+        formatter.format(localDateTime)
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (message.isFromLocalUser) Alignment.End else Alignment.Start
@@ -149,7 +160,7 @@ fun MessageRow(message: BluetoothMessage) {
         }
         Spacer(Modifier.height(2.dp))
         Text(
-            text = message.senderName,
+            text = formattedTime,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

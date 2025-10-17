@@ -10,12 +10,11 @@ import com.example.dainttabluetoothhackathon.domain.ConnectionResult
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -24,23 +23,24 @@ class BluetoothViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BluetoothUIState())
-    val state = combine(
-        bluetoothController.isScanning,
-        bluetoothController.scannedDevices,
-        bluetoothController.pairedDevices,
-        _state
-    ) { isScanning, scannedDevices, pairedDevices, state ->
-        state.copy(
-            scannedDevices = scannedDevices,
-            pairedDevices = pairedDevices,
-            isScanning = isScanning,
-            messages = if (state.isConnected) state.messages else emptyList()
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
+    val state: StateFlow<BluetoothUIState>
+        get() = _state.asStateFlow()
 
     private var deviceConnectionJob: Job? = null
 
     init {
+        bluetoothController.scannedDevices.onEach { devices ->
+            _state.update { it.copy(scannedDevices = devices) }
+        }.launchIn(viewModelScope)
+
+        bluetoothController.pairedDevices.onEach { devices ->
+            _state.update { it.copy(pairedDevices = devices) }
+        }.launchIn(viewModelScope)
+
+        bluetoothController.isScanning.onEach { isScanning ->
+            _state.update { it.copy(isScanning = isScanning) }
+        }.launchIn(viewModelScope)
+
         bluetoothController.isConnected.onEach { isConnected ->
             _state.update { it.copy(isConnected = isConnected) }
         }.launchIn(viewModelScope)

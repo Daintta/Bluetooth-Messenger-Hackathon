@@ -115,7 +115,7 @@ class AndroidBluetoothController(
 
     override fun startDiscovery() {
         val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            hasPermission(Manifest.permission.BLUETOOTH_SCAN)
+            hasPermission(Manifest.permission.BLUETOOTH_SCAN) && hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
         } else {
             hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)
         }
@@ -258,7 +258,7 @@ class AndroidBluetoothController(
 @SuppressLint("MissingPermission")
 fun BluetoothDevice.toBluetoothDevice(): com.example.dainttabluetoothhackathon.data.BluetoothDevice {
     return com.example.dainttabluetoothhackathon.data.BluetoothDevice(
-        name = name,
+        name = name ?: address,
         address = address
     )
 }

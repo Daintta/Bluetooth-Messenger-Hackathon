@@ -8,5 +8,16 @@ data class BluetoothUIState(
     val isServerStarted: Boolean = false,
     val isScanning: Boolean = false,
     val errorMessage: String? = null,
-    val messages: List<BluetoothMessage> = emptyList()
+    val messages: List<BluetoothMessage> = listOf(
+        BluetoothMessage(
+            message = "Hey! Ready to test Bluetooth chat?",
+            senderName = "Me",
+            isFromLocalUser = true
+        ),
+        BluetoothMessage(
+            message = "Yep, let's do it 👋",
+            senderName = "Other",
+            isFromLocalUser = false
+        )
+    )
 )
