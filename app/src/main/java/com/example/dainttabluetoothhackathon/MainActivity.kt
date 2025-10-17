@@ -4,44 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.dainttabluetoothhackathon.ui.theme.DainttaBluetoothHackathonTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import com.example.dainttabluetoothhackathon.ui.ConversationScreen
+import com.example.dainttabluetoothhackathon.ui.theme.ChatTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            DainttaBluetoothHackathonTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            ChatTheme {
+                Surface(color = MaterialTheme.colorScheme.background){
+                    ConversationScreen()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DainttaBluetoothHackathonTheme {
-        Greeting("Android")
     }
 }
